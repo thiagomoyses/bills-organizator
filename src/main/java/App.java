@@ -1,39 +1,55 @@
+import view.BillView;
+import view.PayerView;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class App {
+public class App extends JFrame {
 
-    private static void createAndShowGuiExample() {
-        //Create and set up the window.
-        JFrame frame = new JFrame("TopLevelDemo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    private JPanel mainPanel;
+    private CardLayout cardLayout;
 
-        //Create the menu bar.  Make it have a green background.
-        JMenuBar greenMenuBar = new JMenuBar();
-        greenMenuBar.setOpaque(true);
-        greenMenuBar.setBackground(new Color(154, 165, 127));
-        greenMenuBar.setPreferredSize(new Dimension(200, 20));
+    public App() {
+        setTitle("Bills Organizator");
+        setSize(1000, 800);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        //Create a yellow label to put in the content pane.
-        JLabel yellowLabel = new JLabel();
-        yellowLabel.setOpaque(true);
-        yellowLabel.setBackground(new Color(248, 213, 131));
-        yellowLabel.setPreferredSize(new Dimension(200, 180));
+        // Create card and container panel
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
 
-        //Set the menu bar and add the label to the content pane.
-        frame.setJMenuBar(greenMenuBar);
-        frame.getContentPane().add(yellowLabel, BorderLayout.CENTER);
+        // Create views
+        JPanel payerView = new PayerView();
+        JPanel billView  = new BillView();
 
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
+        // Add views to card layout panel
+        mainPanel.add(payerView, "PAYER");
+        mainPanel.add(billView, "BILL");
+
+        // Buttons to switch views
+        JButton bttPayers = new JButton("Payers");
+        JButton bttBills = new JButton("Bills");
+
+        // Action listeners for buttons
+        bttPayers.addActionListener(e -> cardLayout.show(mainPanel, "PAYER"));
+        bttBills.addActionListener(e -> cardLayout.show(mainPanel, "BILL"));
+
+        // Panel for buttons
+        JPanel optionPanel = new JPanel(new GridLayout(1, 2));
+        optionPanel.add(bttPayers);
+        optionPanel.add(bttBills);
+
+        // Add panels to frame
+        add(optionPanel, BorderLayout.NORTH);
+        add(mainPanel, BorderLayout.CENTER);
+
+        // Center the frame on the screen
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGuiExample();
-            }
-        });
+        SwingUtilities.invokeLater(App::new);
     }
 }
